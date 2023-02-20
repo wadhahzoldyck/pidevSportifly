@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ActiviterRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ActiviterRepository::class)]
 class Activiter
@@ -13,15 +14,30 @@ class Activiter
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    #[Assert\NotBlank(message:"merci de remplir le champ")]
+    #[Assert\Length(
+        min: 2,
+        max: 20,
+        minMessage: 'votre titre ne contient pas {{ limit }} characters',
+        maxMessage: 'votre titre a depassé {{ limit }} characters',
+    )]
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
 
+    #[Assert\GreaterThan('today',message: ("date deja pass.."))]
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date_debut = null;
-
+    #[Assert\Expression('this.getDateDebut()<this.getDateFin()',message: ("erreur periode"))]
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date_fin = null;
+
+    #[ORM\ManyToOne(inversedBy: 'activiters')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?CategorieActivite $ref_categ = null;
+
+    #[ORM\ManyToOne(inversedBy: 'activiters')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $id_user = null;
 
     public function getId(): ?int
     {
@@ -60,6 +76,30 @@ class Activiter
     public function setDateFin(\DateTimeInterface $date_fin): self
     {
         $this->date_fin = $date_fin;
+
+        return $this;
+    }
+
+    public function getRefCateg(): ?CategorieActivite
+    {
+        return $this->ref_categ;
+    }
+
+    public function setRefCateg(?CategorieActivite $ref_categ): self
+    {
+        $this->ref_categ = $ref_categ;
+
+        return $this;
+    }
+
+    public function getIdUser(): ?User
+    {
+        return $this->id_user;
+    }
+
+    public function setIdUser(?User $id_user): self
+    {
+        $this->id_user = $id_user;
 
         return $this;
     }

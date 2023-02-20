@@ -1,0 +1,43 @@
+
+{% extends 'baseadmin.html.twig' %}
+
+{% block title  %} Add Activiter {% endblock %}
+
+{% block body %}
+    <div style="position: absolute; margin-left: 500px; margin-top: 100px">
+    <h1>Ajouter une activitee</h1>
+    {{ form_start(form,{'attr': {'novalidate':'novalidate'}} ) }}
+    <div class="form-group">
+
+        {{ form_label(form.titre) }}
+        {{ form_widget(form.titre) }}
+
+        <div class="col-md-6">
+            <div class="invalid-feedback">
+            {{ form_errors (form.titre) }}
+        </div>
+        </div>
+
+    </div>
+    <div class="form-group">
+        {{ form_label(form.date_debut) }}
+        {{ form_widget(form.date_debut) }}
+        {{ form_errors (form.date_debut) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.date_fin) }}
+        {{ form_widget(form.date_fin) }}
+        {{ form_errors (form.date_fin) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.ref_categ,'sport') }}
+        <br>
+        {{ form_widget(form.ref_categ) }}
+    </div>
+    <br>
+    <button class="btn btn-primary">
+        Ajouter activiter
+    </button>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
