@@ -1,0 +1,43 @@
+{% extends 'baseadmin.html.twig' %}
+
+
+{% block title  %}Les evenements {% endblock %}
+
+{% block body %}
+<div style="position: absolute; margin-left: 500px; margin-top: 100px">
+    <h4>List Events</h4>
+
+    <a href="{{path('app_addevent')}}" class="btn btn-primary" tabindex="-1" role="button">Add Event</a>
+    <a href="{{path('app_listParticipants')}}" class="btn btn-primary" tabindex="-1" role="button">Consult Participants List</a>
+    <table class="table table-striped">
+    <tr>
+        <td>Id</td>
+        <td>Titre</td>
+        <td>Date</td>
+        <td>Description</td>
+        <td>image</td>
+        <td>lieu</td>
+         <td>update</td>
+        <td>delete</td>
+
+
+
+    </tr>
+    {% for i in tabEvents %}
+        <tr>
+
+            <td>{{ i.id }}</td>
+            <td>{{ i.titre }}</td>
+            <td>{{i.date|date("m/d/Y") }}</td>
+            <td>{{ i.description }}</td>
+            <td>{{ i.img }}</td>
+            <td>{{ i.lieu }}</td>
+            <td><a href="{{ path('app_updateEvent',{'id':i.id}) }}"  class="btn btn-primary" tabindex="-1" role="button" >Update</a> </td>
+            <td><a  href="{{ path('app_removeEvent',{'id':i.id}) }}"class="btn btn-primary" tabindex="-1" role="button" >delete</a> </td>
+
+            <br>
+        </tr>
+
+</div>
+    {% endfor %}
+    </table>{% endblock %}
