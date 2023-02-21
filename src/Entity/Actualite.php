@@ -20,7 +20,7 @@ class Actualite
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Asserts\Length (min:5,minMessage:"le titre n'est pas assé long")]
+    #[Asserts\Length (min:3,minMessage:"le titre n'est pas assé long")]
     private ?string $titre = null;
 
     #[ORM\Column(length: 255)]

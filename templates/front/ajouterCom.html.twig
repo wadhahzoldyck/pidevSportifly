@@ -2,6 +2,8 @@
 {%block middle %}
     <div class="middle">
         <h4>ajouter commentaire actualite</h4>
-        {{ form(form) }}
+        {{ form_start(form,{'atte':{'novalidate':'novalidate'}}) }}
+        {{form_row(form.contenu)}}
+        {{form_end(form)}}
     </div>
 {%endblock%}

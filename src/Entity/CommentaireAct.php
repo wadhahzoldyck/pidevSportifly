@@ -19,6 +19,7 @@ class CommentaireAct
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message:"veillez entrer un contenu")]
+    #[Assert\Length (min:3,minMessage:"le commentaire n'est pas assé long")]
     private ?string $contenu = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
