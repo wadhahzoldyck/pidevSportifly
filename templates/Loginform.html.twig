@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{% block title %}Welcome to sportifly!{% endblock %}</title>
+
+{% block stylesheets %}
+    <div class="body">
+        <nav>
+            <div class="container">
+                <div class="logo">
+                    <img src="{{ asset('frontoffice/images/logo.png') }}" alt="#" style="width:20%;">
+                </div>
+            </div>
+        </nav>
+    </div>
+
+<link href="{{ asset('https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet')}}">
+
+<link rel="stylesheet" href="{{ asset('fonts/icomoon/style.css')}}">
+
+<link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css')}}">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css')}}">
+
+<!-- Style -->
+<link rel="stylesheet" href="{{ asset('css/style.css')}}">
+
+<title>Login #8</title>
+{% block javascripts %}
+    <script src="{{ asset('js/jquery-3.3.1.min.js')}}"></script>
+    <script src="{{ asset('js/popper.min.js')}}"></script>
+    <script src="{{ asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{ asset('js/main.js')}}"></script>
+{% endblock %}
+{% block body %}
+    {% endblock %}
+
+{% endblock %}
+
+</html>

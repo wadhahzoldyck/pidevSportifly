@@ -1,0 +1,67 @@
+
+{% extends 'dashboard.html.twig' %}
+
+{% block body %}
+<div style="position: absolute; margin-left:400px; margin-top: 100px">
+
+    <table class="table table-striped">
+        <tr>
+        <tr>
+            <th>Email</th>
+            <th>lastname</th>
+            <th>Roles</th>
+            <th>diplome</th>
+            <th>experience</th>
+            <th>image</th>
+            <th>actions</th>
+
+
+
+
+
+
+        </tr>
+    {% block title %}Liste des users {% endblock %}
+
+    <h1>Liste des users</h1>
+
+        <table class="table table-striped">
+        <tbody>
+        {% for user in users %}
+            <tr>
+
+                <td>{{user.email }}</td>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                <td>{{ user.diplome }}</td>
+                <td>{{ user.experience }}</td>
+                <td>{{ user.image }}</td>
+                {% if 'Role_Coach'  in user.roles %}
+                {% set img = user.image %}
+
+                <td><img src="{{asset(img)}}" alt="#" style="width:50%;"></td>
+                    <td>
+                        <a href="{{ path('app_user_edit', {'id': user.id})}}" class="btn btn-primary" tabindex="-1" role="button">Edit</a>
+                    </td>
+                {% endif %}
+
+                {# <td>{{ coach.accepte ? 'Yes' : 'No' }}</td> #}
+
+
+
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="20">no records found</td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+   {#<a href="{{ path('app_add_user') }}">Create new</a> #}
+    {% endblock %}
+
+
+
+
