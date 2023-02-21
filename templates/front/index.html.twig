@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <!-- ICONSCOUT CDN -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css">
+    <!-- STYLESHEET -->
+    <link rel="stylesheet" href="{{ asset('frontoffice/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontoffice/css/form.css') }}">
+{% endblock %}
+
+{% block title %}Les actualites{% endblock %}
+
+{% block body %}
+    <div style="position: absolute; margin-left: 500px; margin-top: 100px">
+        <h1>Liste des actualites</h1>
+
+        {% for actualite in actualites %}
+
+            <h2>{{ actualite.titre }}</h2>
+            <h4>{{ actualite.image }}</h4>
+            <p>{{ actualite.date|date("F jS \\a\\t g:ia") }}</p>
+            <p>{{ actualite.categorie }}</p>
+            <p>{{ actualite.description }}</p>
+            <p><a href="{{ path('app_ajouterCom', {'id': actualite.id}) }}">Ajouter commentaire</a></p>
+
+            <h4>Commentaires:</h4>
+            {% for commentaire in actualite.commentaireActs %}
+                <div class="commentaire">
+
+                    <span class="date">{{ commentaire.date | date("d/m/Y H:i") }}</span>
+                    <p>{{ commentaire.contenu }}</p>
+                    <a href="{{ path('app_updateCom', {'id': commentaire.id}) }}"><i class="fas fa-edit"></i> Modifier</a>
+                    <a href="{{ path('app_supprimerCom', {'id': commentaire.id}) }}"><i class="fas fa-trash"></i> Supprimer</a>
+                </div>
+            {% endfor %}
+
+            <br>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}
