@@ -20,19 +20,24 @@
             <!-- progressbar -->
 
             <!-- fieldsets -->
-            {{ form_start(form) }}
+            {{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }}
             <fieldset>
                 <h2 class="fs-title">Modifier Offre</h2>
 
                 <div class="form-group">
                     {{ form_widget(form.description) }}
+                    {{ form_errors(form.description) }}
+
                 </div>
                 <div class="form-group">
 
                     {{ form_widget(form.prix) }}
+                    {{ form_errors(form.prix) }}
+
                 </div>
                 <br>
                 <div class="form-group">
+                    {{ form_errors(form.affiche) }}
 
                     {{ form_widget(form.affiche) }}
                 </div>

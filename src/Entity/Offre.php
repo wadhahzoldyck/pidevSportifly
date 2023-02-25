@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: OffreRepository::class)]
 class Offre
@@ -15,16 +17,31 @@ class Offre
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    #[Assert\GreaterThan('today',message: ("date deja pass.."))]
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date = null;
+
+
 
     #[ORM\Column(length: 255)]
     private ?string $affiche = null;
 
+    #[Assert\NotBlank(message:"merci de remplir le champ")]
+    #[Assert\NotEqualTo(
+        value: 0,
+        message : "Le prix d'un Offre ne doit pas etre égal a 0"
+    )]
+
     #[ORM\Column]
     private ?float $prix = null;
 
+    #[Assert\NotBlank(message:"merci de remplir le champ")]
+    #[Assert\Length(
+        min: 10,
+        max: 200,
+        minMessage: 'votre titre ne contient pas {{ limit }} characters',
+        maxMessage: 'votre titre a depassé {{ limit }} characters',
+    )]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
