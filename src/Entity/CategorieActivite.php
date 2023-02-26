@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Repository\CategorieActiviteRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CategorieActiviteRepository::class)]
 class CategorieActivite
 {
@@ -13,10 +13,10 @@ class CategorieActivite
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    #[Assert\NotBlank(message:"merci de remplir le champ")]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
-
+    #[Assert\NotBlank(message:"merci de remplir le champ")]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 

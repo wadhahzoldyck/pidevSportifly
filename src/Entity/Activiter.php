@@ -25,10 +25,10 @@ class Activiter
     private ?string $titre = null;
 
     #[Assert\GreaterThan('today',message: ("date deja pass.."))]
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date_debut = null;
     #[Assert\Expression('this.getDateDebut()<this.getDateFin()',message: ("erreur periode"))]
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date_fin = null;
 
     #[ORM\ManyToOne(inversedBy: 'activiters')]

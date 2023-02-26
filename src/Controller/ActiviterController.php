@@ -22,7 +22,7 @@ class ActiviterController extends AbstractController
     { $user=new User();
         $user=$repository2->find(1 );
         $activiter= $repository->findBy(['id_user' => $user]);
-        return $this->render("activiter/liste.html.twig",array("tabActiviter"=>$activiter));
+        return $this->render("activiter/listefront.html.twig",array("tabActiviter"=>$activiter));
     }
 
 
