@@ -5,11 +5,13 @@ namespace App\Controller;
 use App\Entity\Offre;
 use App\Entity\User;
 use App\Form\OffreType;
+use App\Repository\CategorieActiviteRepository;
 use App\Repository\OffreRepository;
 
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -235,16 +237,40 @@ class OffreController extends AbstractController
 
 
     #[Route('/offre/listOffre', name: 'app_listoffrefront')]
-    public function afficher_offre(OffreRepository $repository , UserRepository $repository1): Response
+    public function afficher_offre(OffreRepository $repository , UserRepository $repository1 , CategorieActiviteRepository $catRepo,Request $request): Response
     {
+        //on récupére  les filtres
+        $filters =$request->get("categories");
+
+
         $user= new User();
         $user = $repository1->find(2);
-        $offre =$repository->findBy(['id_user' => $user]);
+        //récupere les offres de la page en fonction des filtres
+        $offre =$repository->getOffresbyCat($filters,2);
+
+        //
+
         $form = $this->createForm(OffreType::class);
+        //Verifier si il ya une requette ajax
+
+        if($request->get('ajax')){
+            return new JsonResponse([
+                'content' => $this->renderView('offre/_feed.html.twig', [
+                    'listOffre' => $offre,
+                    'form' => $form->createView(),
+                ])
+            ]);
+        }
+
+        $categories = $catRepo->findAll();
         return $this->render('offre/index1.html.twig', [
             'listOffre' => $offre,
+            'categories' => $categories,
             'form' => $form->createView(),
         ]);
     }
+
+
+    //
 
 }

@@ -52,6 +52,11 @@ class Offre
     #[ORM\JoinColumn(nullable: false)]
     private ?User $id_user = null;
 
+    #[ORM\ManyToOne(inversedBy: 'offres')]
+    private ?CategorieActivite $id_category = null;
+
+
+
 
 
     public function __construct()
@@ -153,6 +158,20 @@ class Offre
 
         return $this;
     }
+
+    public function getIdCategory(): ?CategorieActivite
+    {
+        return $this->id_category;
+    }
+
+    public function setIdCategory(?CategorieActivite $id_category): self
+    {
+        $this->id_category = $id_category;
+
+        return $this;
+    }
+
+
 
 
 }

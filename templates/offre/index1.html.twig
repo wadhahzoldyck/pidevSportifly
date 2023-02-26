@@ -1,8 +1,105 @@
 {% extends 'base.html.twig' %}
 
 {% block title %} Mes Offres {% endblock %}
+ {%block left%}
+     <div class="left">
+         <a href="#" class="profile">
+             <div class="profile-picture">
+                 <img src="{{ asset('frontoffice/images/messi.jpg') }}" alt="">
+             </div>
+             <div class="handle">
+                 <h4>Lionel messi</h4>
+                 <p class="text-muted">
+                     @legend
+                 </p>
+             </div>
+         </a>
+
+
+         <!-------------------- SIDEBAR ------------------------->
+
+         <div class="sidebar">
+             <a class="menu-item active" href="{{path('app_listoffrefront')}}">
+                 <span><i class="uil uil-gift"></i></span><h3>Mes Offres</h3>
+             </a>
+             <a class="menu-item" href="{{path('app_listreservationcoach')}}">
+                 <span><i class="uil uil-compass"></i></span><h3>Les réservations</h3>
+             </a>
+             <a class="menu-item" id="notifications">
+                 <span><i class="uil uil-bell"><small class="notification-count">9+</small></i></span><h3>Notifications</h3>
+                 <!-------------------- NOTIFICATION POPUP ---------------->
+                 <div class="notifications-popup">
+                     <div>
+                         <div class="profile-picture">
+                             <img src="{{ asset('frontoffice/images/profile-2.jpg') }}" alt="">
+                         </div>
+                         <div class="notification-body">
+                             <b>Keke Benjamin</b> Reserver votre Offre
+                             <small class="text-muted">2 DAYS AGO</small>
+                         </div>
+                     </div>
+                     <div>
+                         <div class="profile-picture">
+                             <img src="{{ asset('frontoffice/images/profile-3.jpg') }}" alt="">
+                         </div>
+                         <div class="notification-body">
+                             <b>John Doe</b> commented on your post
+                             <small class="text-muted">1 HOUR AGO</small>
+                         </div>
+                     </div>
+                     <div>
+                         <div class="profile-picture">
+                             <img src="{{ asset('frontoffice/images/profile-4.jpg') }}" alt="">
+                         </div>
+                         <div class="notification-body">
+                             <b>Mary Oppong</b> and <b>283 others </b> liked your post
+                             <small class="text-muted">4 MINUTES AGO</small>
+                         </div>
+                     </div>
+                     <div>
+                         <div class="profile-picture">
+                             <img src="{{ asset('frontoffice/images/profile-5.jpg') }}" alt="">
+                         </div>
+                         <div class="notification-body">
+                             <b>Doris Y. Lartey</b> commented on a post you are tagged in
+                             <small class="text-muted">2 DAYS AGO</small>
+                         </div>
+                     </div>
+
+                 </div>
+                 <!-------------------- END NOTIFICATION POPUP ---------------->
+             </a>
+
+             <a class="menu-item">
+                 <span><i class="uil uil-compass"></i></span><h3>Reservation</h3>
+             </a>
+             <a class="menu-item">
+                 <span><i class="uil uil-schedule"></i></span><h3>Planning</h3>
+             </a>
+             <a class="menu-item" id="theme">
+                 <span><i class="uil uil-palette"></i></span><h3>Theme</h3>
+             </a>
+
+         </div>
+         <!------------------- END OF SIDEBAR -------------------->
+         <label for="create-post" class="btn btn-primary">Create Post</label>
+         <br>
+         <br>
+
+         <div>
+             <p style="text-align: center">filtre</p>
+             <form  id="filters">
+                 {% for categorie in categories %}
+                     <p><input type="checkbox" name="categories[]" id="cat{{categorie.id}}" value="{{categorie.id}}">
+                         <label for="cat{{ categorie.id }}">{{ categorie.nom }}</label></p>
+                 {% endfor %}
+             </form>
+         </div>
+     </div>
+ {% endblock %}
 
 {% block middle %}
+
 
        <div class="middle">
            <!------------------- STORIES -------------------->
@@ -46,44 +143,14 @@
            </div>
            <!------------------- END OF STORIES -------------------->
 <!--------------- FEEDS ----------->
-           {% for i in listOffre%}
-           <div class="feeds">
-               <div class="feed">
-                   <div class="head">
-                       <div class="user">
-                           <div class="profile-picture">
-                               <img src="{{ asset('frontoffice/images/messi.jpg') }}" alt="">
-                           </div>
-                           <div class="info">
+           <div class="feeds" id="content">
 
-                               <h3>Lionel Messi</h3>
-                               <small>Tounes, 15 minute Ago</small>
-                           </div>
-                       </div>
-
-                   </div>
-
-                   <div class="text">
-                       <p>{{ i.description }}</p>
-                   </div>
-                   <div class="photo">
-                       <img src="{{ asset('uploads/offre/'~ i.affiche) }}" alt="">
-                   </div>
-                   <div class="action-button">
-                       <div>
-                           <a href="{{ path('offre_modify',{'id':i.id}) }}"  class="btn btn-primary" tabindex="-1" role="button" >Update</a>
-
-                       </div>
-                       <div class="bookmark">
-                           <button class="btn1"><a  href="{{ path('app_removeOffre',{'id':i.id}) }}"class="btn btn-primary" tabindex="-1" role="button" >delete</a></button>
-
-                       </div>
-                   </div>
-
-               </div>
+           {% include "offre/_feed.html.twig" %}
            </div>
-           {% endfor %}
-       </div>
+      </div>
 
 {% endblock %}
 {% block right %} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, nostrum! {% endblock %}
+ {% block javascripts %}
+     <script src="{{ asset('frontoffice/js/filter2.js') }}"></script>
+ {% endblock %}

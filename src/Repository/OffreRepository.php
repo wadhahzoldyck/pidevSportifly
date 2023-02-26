@@ -39,6 +39,20 @@ class OffreRepository extends ServiceEntityRepository
         }
     }
 
+    public function getOffresbyCat($filters=null,$id){
+      $query = $this->createQueryBuilder('o')
+          ->where('o.id_user = :id')
+          ->setParameter(':id',$id);
+      if($filters != null){
+          $query->andWhere('o.id_category IN(:cats)')
+              ->setParameter(':cats', array_values($filters));
+      }
+
+      return $query->getQuery()->getResult();
+
+
+    }
+
 //    /**
 //     * @return Offre[] Returns an array of Offre objects
 //     */

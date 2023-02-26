@@ -62,6 +62,7 @@ class OffreType extends AbstractType
                     ])
                 ],
             ])
+            ->add('id_category')
 
         ;
     }
