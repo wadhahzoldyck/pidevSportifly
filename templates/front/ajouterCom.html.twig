@@ -1,9 +1,43 @@
-{% extends 'base.html.twig'%}
-{%block middle %}
+{% extends 'base.html.twig' %}
+
+{% block middle %}
     <div class="middle">
-        <h4>ajouter commentaire actualite</h4>
+        <h2>{{ actualite.titre }}</h2>
+        <div class="photo">
+            <img src="{{ asset('uploads/images/'~ actualite.image ) }}" alt="">
+        </div>
+        <p>{{ actualite.date|date("F jS \\a\\t g:ia") }}</p>
+        <p>{{ actualite.categorie }}</p>
+        <p>{{ actualite.description }}</p>
+        <h4>Commentaires:</h4>
+        {% for commentaire in actualite.commentaireActs %}
+            <div class="commentaire">
+
+                <span class="date">{{ commentaire.date | date("d/m/Y H:i") }}</span>
+                <p>{{ commentaire.contenu }}</p>
+
+
+                <div class="action-button">
+                    <div>
+                        <a href="{{ path('app_updateCom',{'id':commentaire.id}) }}"  class="btn btn-primary" tabindex="-1" role="button" >Update</a>
+
+                    </div>
+                    <div class="bookmark">
+                        <button class="btn1"><a  href="{{ path('app_supprimerCom',{'id':commentaire.id}) }}"class="btn btn-primary" tabindex="-1" role="button" >delete</a></button>
+
+                    </div>
+                </div>
+
+                {# <a href="{{ path('app_updateCom', {'id': commentaire.id}) }}"><i class="fas fa-edit"></i> Modifier</a>
+                    <a href="{{ path('app_supprimerCom', {'id': commentaire.id}) }}"><i class="fas fa-trash"></i> Supprimer</a>#}
+            </div>
+        {% endfor %}
+
+        <br>
+
+        <h4>Ajouter commentaire</h4>
         {{ form_start(form,{'atte':{'novalidate':'novalidate'}}) }}
         {{form_row(form.contenu)}}
         {{form_end(form)}}
     </div>
-{%endblock%}
+{% endblock %}

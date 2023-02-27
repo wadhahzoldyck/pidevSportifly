@@ -38,6 +38,17 @@ class ActualiteRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function search($query)
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        return $qb->where($qb->expr()->like('a.titre', ':query'))
+            ->orWhere($qb->expr()->like('a.description', ':query'))
+            ->setParameter('query', '%'.$query.'%')
+            ->getQuery()
+            ->getResult();
+    }
+
 
 //    /**
 //     * @return Actualite[] Returns an array of Actualite objects

@@ -2,7 +2,7 @@
 
 {% block title  %}Les actualite{% endblock %}
 {%block body %}
-    <div style="position: absolute; margin-left: 500px; margin-top: 100px">
+    <div style="position: absolute; margin-left: 300px; margin-top: 100px">
     <h4>list actualites</h4>
     <a href="{{ path('app_ajouteractualite') }}">ajouter actualite</a>
     <table border="2">
@@ -18,7 +18,10 @@
             <tr>
         <td>{{i.id}}</td>
         <td>{{i.titre}}</td>
-        <td>{{i.image}}</td>
+        {#<td>{{i.image}}</td>#}
+         <td>  <div class="photo">
+                <img src="{{ asset('uploads/images/'~ i.image ) }}" alt="">
+            </div>  </td>
         <td>{{i.date|date("F jS \\a\\t g:ia")}}</td>
         <td>{{i.description}}</td>
         <td>{{i.categorie}}</td>

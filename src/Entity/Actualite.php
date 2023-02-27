@@ -11,7 +11,9 @@ use http\Message;
 use Symfony\Component\Validator\Constraints as Asserts;
 use Gedmo\Mapping\Annotation as Gedmo;
 
+
 #[ORM\Entity(repositoryClass: ActualiteRepository::class)]
+
 class Actualite
 {
     #[ORM\Id]
@@ -75,18 +77,17 @@ class Actualite
         return $this;
     }
 
+
     public function getImage(): ?string
     {
         return $this->image;
     }
 
-    public function setImage(string $image): self
+    public function setImage(?string $image): self
     {
         $this->image = $image;
-
         return $this;
     }
-
 
     public function getDescription(): ?string
     {

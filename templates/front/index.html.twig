@@ -13,29 +13,83 @@
 {% block middle %}
     <div class="middle">
 
+        <!------------------- STORIES -------------------->
+        <div class="stories">
+            <div class="story">
+                <div class="profile-picture">
+                    <img src="{{ asset('frontoffice/images/profile-20.jpg')}}">
+                </div>
+                <p class="name">Your Story</p>
+            </div>
+            <div class="story">
+                <div class="profile-picture">
+                    <img src="{{ asset('frontoffice/images/profile-9.jpg')}}">
+                </div>
+                <p class="name">Lilla James </p>
+            </div>
+            <div class="story">
+                <div class="profile-picture">
+                    <img src="{{ asset('frontoffice/images/profile-10.jpg')}}">
+                </div>
+                <p class="name">Winnie Hale</p>
+            </div>
+            <div class="story">
+                <div class="profile-picture">
+                    <img src="{{ asset('frontoffice/images/profile-11.jpg')}}">
+                </div>
+                <p class="name">Daniel Bale</p>
+            </div>
+            <div class="story">
+                <div class="profile-picture">
+                    <img src="{{ asset('frontoffice/images/profile-12.jpg')}}">
+                </div>
+                <p class="name">Jane Doe</p>
+            </div>
+            <div class="story">
+                <div class="profile-picture">
+                    <img src="{{ asset('frontoffice/images/profile-8.jpg')}}">
+                </div>
+                <p class="name">Tina White</p>
+            </div>
+        </div>
+        <!------------------- END OF STORIES -------------------->
         <h1>Liste des actualites</h1>
+        <!--------------- FEEDS ----------->
+        <form action="{{ path('app_recherche') }}" method="get">
+            <input type="search" name="q" placeholder="Recherche...">
+            <button type="submit">Recherche</button>
+        </form>
 
         {% for actualite in actualites %}
 
-            <h2>{{ actualite.titre }}</h2>
-            <h4>{{ actualite.image }}</h4>
-            <p>{{ actualite.date|date("F jS \\a\\t g:ia") }}</p>
-            <p>{{ actualite.categorie }}</p>
-            <p>{{ actualite.description }}</p>
-            <p><a href="{{ path('app_ajouterCom', {'id': actualite.id}) }}">Ajouter commentaire</a></p>
 
-            <h4>Commentaires:</h4>
-            {% for commentaire in actualite.commentaireActs %}
-                <div class="commentaire">
-
-                    <span class="date">{{ commentaire.date | date("d/m/Y H:i") }}</span>
-                    <p>{{ commentaire.contenu }}</p>
-                    <a href="{{ path('app_updateCom', {'id': commentaire.id}) }}"><i class="fas fa-edit"></i> Modifier</a>
-                    <a href="{{ path('app_supprimerCom', {'id': commentaire.id}) }}"><i class="fas fa-trash"></i> Supprimer</a>
+            <article class="brick entry format-standard animate-this">
+                <div class="entry-thumb">
+                    <a href="{{ path('app_ajouterCom', {'id': actualite.id}) }}" class="thumb-link">
+                        <img src="{{ asset('uploads/images/'~ actualite.image ) }}" alt="">
+                    </a>
                 </div>
-            {% endfor %}
+                <div class="entry-text">
+                    <div class="entry-header">
+                        <div class="entry-meta">
+                <span class="cat-links">
+                    {{ actualite.categorie }}
+                </span>
+                        </div>
+                        <h1 class="entry-title">
+                            <a href="{{ path('app_ajouterCom', {'id': actualite.id}) }}">
+                                {{ actualite.titre }}
+                            </a>
+                        </h1>
+                    </div>
+                    <div class="entry-excerpt">
+                        {{ actualite.description }}
+                    </div>
+                    <p>{{ actualite.date|date("F jS \\a\\t g:ia") }}</p>
 
-            <br>
+                </div>
+            </article>
+
         {% endfor %}
 
     </div>
