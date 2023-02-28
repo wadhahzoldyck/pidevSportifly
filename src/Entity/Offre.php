@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -16,14 +17,18 @@ class Offre
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("Offre")]
     private ?int $id = null;
     #[Assert\GreaterThan('today',message: ("date deja pass.."))]
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups("Offre")]
     private ?\DateTimeInterface $date = null;
 
 
 
     #[ORM\Column(length: 255)]
+    #[Groups("Offre")]
+
     private ?string $affiche = null;
 
     #[Assert\NotBlank(message:"merci de remplir le champ")]
@@ -33,6 +38,8 @@ class Offre
     )]
 
     #[ORM\Column]
+    #[Groups("Offre")]
+
     private ?float $prix = null;
 
     #[Assert\NotBlank(message:"merci de remplir le champ")]
@@ -43,6 +50,8 @@ class Offre
         maxMessage: 'votre titre a depassé {{ limit }} characters',
     )]
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups("Offre")]
+
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'id_offre', targetEntity: Reservation::class)]
@@ -50,9 +59,13 @@ class Offre
 
     #[ORM\ManyToOne(inversedBy: 'offre')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups("Offre")]
+
     private ?User $id_user = null;
 
     #[ORM\ManyToOne(inversedBy: 'offres')]
+    #[Groups("Offre")]
+
     private ?CategorieActivite $id_category = null;
 
 
