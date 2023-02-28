@@ -25,6 +25,9 @@ class Reservation
     #[ORM\JoinColumn(nullable: false)]
     private ?User $id_user = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $Status = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -62,6 +65,18 @@ class Reservation
     public function setIdUser(?User $id_user): self
     {
         $this->id_user = $id_user;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->Status;
+    }
+
+    public function setStatus(string $Status): self
+    {
+        $this->Status = $Status;
 
         return $this;
     }

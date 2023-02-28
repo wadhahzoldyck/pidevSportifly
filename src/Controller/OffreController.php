@@ -42,8 +42,11 @@ class OffreController extends AbstractController
     #[Route('/offre/AllOffres', name: 'app_Alloffre')]
     public function allOffre(OffreRepository $repository , UserRepository $repository1): Response
     {
+         //$user = new User();
+        //$user->getuser
+        //$user = $repository1->find(2);
 
-        $offre =$repository->findAll();
+        $offre =$repository->findAvailableOffersByUserId(2);
 
         return $this->render('offre/userspace.html.twig', array( 'listOffre' => $offre,));
     }

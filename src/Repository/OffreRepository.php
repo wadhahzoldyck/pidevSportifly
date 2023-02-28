@@ -52,6 +52,18 @@ class OffreRepository extends ServiceEntityRepository
 
 
     }
+    public function findAvailableOffersByUserId($userId)
+    {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery('SELECT o from App\Entity\Offre o WHERE NOT EXISTS (SELECT 1 from App\Entity\Reservation r  WHERE r.id_offre = o.id AND r.id_user =:id) ORDER BY o.date desc')
+            ->setParameter('id',$userId);
+
+        return $query->getResult();
+    }
+
+
+
 
 //    /**
 //     * @return Offre[] Returns an array of Offre objects

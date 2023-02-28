@@ -87,7 +87,7 @@ class ReservationRepository extends ServiceEntityRepository
             ->select('o.description')
             ->join('r.id_offre','o')
             ->where('o.id=r.id_offre')
-            ->andWhere('o.id_user=:id')
+            ->andWhere('r.id_user=:id')
             ->setParameter('id',$id)
             ->getQuery()
             ->getResult();

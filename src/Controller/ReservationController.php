@@ -60,6 +60,7 @@ class ReservationController extends AbstractController
         $reservation->setIdUser($user);
         $reservation->setIdOffre($offre);
         $reservation->setDate(new \DateTime('now') ) ;
+        $reservation->setStatus('En Cours');
         $em = $doctrine->getManager();
         $em->persist($reservation);
         $em->flush();
@@ -74,7 +75,8 @@ class ReservationController extends AbstractController
     {   $user=$repository->getuser();
         $offre = $repository->getOffre();
         $reservation =$repository->findAll();
-        return $this->render('reservation/listres.html.twig', [
+        return $this->render('reservation/
+        .html.twig', [
             'reservation' => $reservation ,
             'offre' => $offre,'user'=>$user
         ] );
@@ -108,7 +110,7 @@ class ReservationController extends AbstractController
 
         $offre =$repository->getOffreById(2);
         $reservation =$repository->findBy(['id_user'=>$user]);
-        return $this->render('reservation/listresfrontcoach.html.twig', [
+        return $this->render('reservation/listdemandes.html.twig', [
             'reservation' => $reservation ,
             'offre' => $offre
         ] );
@@ -135,6 +137,36 @@ class ReservationController extends AbstractController
         $em->remove($offre);
         $em->flush();
         return $this->redirectToRoute("app_listreservation");
+
+    }
+
+
+    //Accepter Reservation
+
+    #[Route('/reservation/accept/{id}', name: 'app_accepterdemande')]
+    public function AccepterReservation($id, ManagerRegistry $doctrine , Request $request , OffreRepository $rep, UserRepository $rep2, ReservationRepository $rep3){
+
+        $reservation = $rep3->find($id);
+        $reservation->setStatus('Accepted');
+        $em = $doctrine->getManager();
+        $em->persist($reservation);
+        $em->flush();
+        return $this->redirectToRoute('app_listreservationcoach');
+
+    }
+
+    //Refuser Reservation
+
+    #[Route('/reservation/decline/{id}', name: 'app_declinedemande')]
+
+    public function RefuserReservation($id, ManagerRegistry $doctrine , Request $request , OffreRepository $rep, UserRepository $rep2, ReservationRepository $rep3){
+
+        $reservation = $rep3->find($id);
+        $reservation->setStatus('Refuser');
+        $em = $doctrine->getManager();
+        $em->persist($reservation);
+        $em->flush();
+        return $this->redirectToRoute('app_listreservationcoach');
 
     }
 }
