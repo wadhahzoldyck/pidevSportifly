@@ -38,6 +38,7 @@ class ActualiteRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
     public function search($query)
     {
         $qb = $this->createQueryBuilder('a');
@@ -48,6 +49,7 @@ class ActualiteRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
 
 
 //    /**

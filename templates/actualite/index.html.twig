@@ -20,7 +20,7 @@
         <td>{{i.titre}}</td>
         {#<td>{{i.image}}</td>#}
          <td>  <div class="photo">
-                <img src="{{ asset('uploads/images/'~ i.image ) }}" alt="">
+                <img style ="width:100px;height: 100px;"src="{{ asset('uploads/images/'~ i.image ) }}" alt="">
             </div>  </td>
         <td>{{i.date|date("F jS \\a\\t g:ia")}}</td>
         <td>{{i.description}}</td>
