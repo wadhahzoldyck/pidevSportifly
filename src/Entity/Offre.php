@@ -68,6 +68,12 @@ class Offre
 
     private ?CategorieActivite $id_category = null;
 
+    #[ORM\OneToMany(mappedBy: 'offre_id', targetEntity: Stars::class)]
+    private Collection $stars;
+
+    #[ORM\Column]
+    private ?int $nbplace = null;
+
 
 
 
@@ -75,6 +81,7 @@ class Offre
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
+        $this->stars = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -180,6 +187,48 @@ class Offre
     public function setIdCategory(?CategorieActivite $id_category): self
     {
         $this->id_category = $id_category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Stars>
+     */
+    public function getStars(): Collection
+    {
+        return $this->stars;
+    }
+
+    public function addStar(Stars $star): self
+    {
+        if (!$this->stars->contains($star)) {
+            $this->stars->add($star);
+            $star->setOffreId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStar(Stars $star): self
+    {
+        if ($this->stars->removeElement($star)) {
+            // set the owning side to null (unless already changed)
+            if ($star->getOffreId() === $this) {
+                $star->setOffreId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getNbplace(): ?int
+    {
+        return $this->nbplace;
+    }
+
+    public function setNbplace(int $nbplace): self
+    {
+        $this->nbplace = $nbplace;
 
         return $this;
     }

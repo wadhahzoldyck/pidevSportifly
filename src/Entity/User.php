@@ -77,12 +77,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'id_user', targetEntity: Reservation::class)]
     private Collection $reservations;
 
+    #[ORM\OneToMany(mappedBy: 'uID', targetEntity: Stars::class)]
+    private Collection $stars;
+
     public function __construct()
     {
         $this->reclamations = new ArrayCollection();
         $this->offres = new ArrayCollection();
         $this->activiters = new ArrayCollection();
         $this->reservations = new ArrayCollection();
+        $this->stars = new ArrayCollection();
     }
 
 
@@ -363,6 +367,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($reservation->getIdUser() === $this) {
                 $reservation->setIdUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Stars>
+     */
+    public function getStars(): Collection
+    {
+        return $this->stars;
+    }
+
+    public function addStar(Stars $star): self
+    {
+        if (!$this->stars->contains($star)) {
+            $this->stars->add($star);
+            $star->setUID($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStar(Stars $star): self
+    {
+        if ($this->stars->removeElement($star)) {
+            // set the owning side to null (unless already changed)
+            if ($star->getUID() === $this) {
+                $star->setUID(null);
             }
         }
 

@@ -8,12 +8,17 @@ use App\Entity\User;
 
 use App\Repository\OffreRepository;
 use App\Repository\ReservationRepository;
-
+use Swift_Mailer;
+use Swift_Message;
 use App\Repository\UserRepository;
+use App\service\MailerService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ReservationController extends AbstractController
@@ -50,12 +55,15 @@ class ReservationController extends AbstractController
 
 
     #[Route('/reserveroffrefront/{id}', name: 'app_reserverOffrefront')]
-    public function ReserverOffre1($id, ManagerRegistry $doctrine , Request $request , OffreRepository $rep, UserRepository $rep2){
+    public function ReserverOffre1($id, ManagerRegistry $doctrine , Request $request , OffreRepository $rep, UserRepository $rep2,Swift_Mailer $mailer){
         $user = new User();
         $offre = new Offre();
         $offre = $rep->find($id);
+        $coach = $offre->getIdUser();
+        $coachemail = $coach->getEmail();
         $user = $rep2->find(2);
-
+        $offre->setNbplace($offre->getNbplace()-1);
+        $user->getEmail();
         $reservation = new Reservation();
         $reservation->setIdUser($user);
         $reservation->setIdOffre($offre);
@@ -64,6 +72,31 @@ class ReservationController extends AbstractController
         $em = $doctrine->getManager();
         $em->persist($reservation);
         $em->flush();
+
+        $content = '<p>Reservation made:</p>';
+        $content .= '<ul>';
+        $content .= '<li>User: '.$user->getEmail().'</li>';
+        $content .= '<li>Offre: '.$offre->getDescription().'</li>';
+        $content .= '<li>Date: '.$reservation->getDate()->format('Y-m-d H:i:s').'</li>';
+        $content .= '</ul>';
+
+        $message=(new  Swift_Message('Reservation accepté'))
+            ->setFrom('wadhah.naggui@esprit.tn')
+            ->setTo($coachemail)
+            ->setBody($content,"text/html");
+
+        $mailer->send($message);
+//
+//        $email = (new Email())
+//            ->from('wadhah.naggui@esprit.tn')
+//            ->to($user->getEmail())
+//            ->subject('Test email')
+//            ->text('This is a test email sent from Symfony Mailer');
+//
+//            $mailer->send($email);
+
+
+
         return $this->redirectToRoute('app_listreservationfront');
 
     }
@@ -119,11 +152,19 @@ class ReservationController extends AbstractController
 
     #[Route('/removeFront/{id}', name: 'app_removeFront')]
 
-    public function deleteRes(ManagerRegistry $doctrine,$id,ReservationRepository  $repository)
+    public function deleteRes(ManagerRegistry $doctrine,$id,ReservationRepository  $repository,OffreRepository $rep)
     {
+
         $res= $repository->find($id);
+        $offre = $res->getIdOffre();
+        $offre->setNbplace($offre->getNbplace()+1);
+
         $em= $doctrine->getManager();
         $em->remove($res);
+
+        // Update the corresponding Offre entity
+        $em->persist($offre);
+
         $em->flush();
         return $this->redirectToRoute("app_listreservationfront");
 
@@ -144,13 +185,32 @@ class ReservationController extends AbstractController
     //Accepter Reservation
 
     #[Route('/reservation/accept/{id}', name: 'app_accepterdemande')]
-    public function AccepterReservation($id, ManagerRegistry $doctrine , Request $request , OffreRepository $rep, UserRepository $rep2, ReservationRepository $rep3){
+    public function AccepterReservation($id, ManagerRegistry $doctrine , Request $request , OffreRepository $rep, UserRepository $rep2, ReservationRepository $rep3,Swift_Mailer $mailer){
 
         $reservation = $rep3->find($id);
         $reservation->setStatus('Accepted');
         $em = $doctrine->getManager();
         $em->persist($reservation);
         $em->flush();
+
+        $user = $reservation->getIdUser();
+        $userEmail= $user->getEmail();
+
+        $offre = $reservation->getIdOffre();
+        $offreDescription = $offre->getDescription();
+
+        // Compose the email message
+        $content = '<p>Your reservation for the following offer has been accepted:</p>';
+        $content .= '<ul>';
+        $content .= '<li>Offer: '.$offreDescription.'</li>';
+        $content .= '</ul>';
+
+        $message = (new Swift_Message('Reservation accepted'))
+            ->setFrom('wadhah.naggui@esprit.tn')
+            ->setTo($userEmail)
+            ->setBody($content, 'text/html');
+
+        $mailer->send($message);
         return $this->redirectToRoute('app_listreservationcoach');
 
     }
@@ -159,13 +219,38 @@ class ReservationController extends AbstractController
 
     #[Route('/reservation/decline/{id}', name: 'app_declinedemande')]
 
-    public function RefuserReservation($id, ManagerRegistry $doctrine , Request $request , OffreRepository $rep, UserRepository $rep2, ReservationRepository $rep3){
+    public function RefuserReservation($id, ManagerRegistry $doctrine , Request $request , OffreRepository $rep, UserRepository $rep2, ReservationRepository $rep3,Swift_Mailer $mailer){
 
         $reservation = $rep3->find($id);
+        if ($reservation->getStatus() == 'Accepted') {
+            $message = 'Reservation cancellation not allowed.';
+            $this->addFlash('warning', $message);
+            return $this->redirectToRoute('app_listreservationfront');
+        }else
         $reservation->setStatus('Refuser');
         $em = $doctrine->getManager();
         $em->persist($reservation);
         $em->flush();
+        $user = $reservation->getIdUser();
+        $userEmail= $user->getEmail();
+
+        $offre = $reservation->getIdOffre();
+        $offreDescription = $offre->getDescription();
+
+        // Compose the email message
+        $content = '<p>Your reservation for the following offer has been Refused:</p>';
+        $content .= '<ul>';
+        $content .= '<li>Offer: '.$offreDescription.'</li>';
+        $content .= '</ul>';
+
+        $message = (new Swift_Message('Reservation Refused'))
+            ->setFrom('wadhah.naggui@esprit.tn')
+            ->setTo($userEmail)
+            ->setBody($content, 'text/html');
+
+        $mailer->send($message);
+        $message = 'Reservation cancelled.';
+        $this->addFlash('success', $message);
         return $this->redirectToRoute('app_listreservationcoach');
 
     }

@@ -71,8 +71,11 @@
                     </div>
                     <div class="action-button">
                         <div>
+                            {% if i.nbplace == 0 %}
+                                <button class="btn btn-primary" disabled>Reserver</button>
+{% else %}
                             <a href="{{ path('app_reserverOffrefront',{'id':i.id}) }}"  class="btn btn-primary" tabindex="-1" role="button" >Reserver</a>
-
+    {% endif %}
                         </div>
 
                     </div>

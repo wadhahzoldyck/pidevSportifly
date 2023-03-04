@@ -50,9 +50,10 @@
 
 
                  {% endif %}
+                        {% if reservation[i].Status!="Accepted" and reservation[i].Status!="Refuser" %}
 
-
-                <td>  <a  href="{{ path('app_removeFront',{'id':reservation[i].id}) }}"class="btn btn-primary" tabindex="-1" role="button" >delete</a> </td>
+                <td>  <a  href="{{ path('app_removeFront',{'id':reservation[i].id}) }}"class="btn btn-primary" tabindex="-1" role="button" >Cancel Reservation</a> </td>
+                {% endif %}
             </tr>
 
             {% endif %}

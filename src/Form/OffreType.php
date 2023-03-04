@@ -35,6 +35,14 @@ class OffreType extends AbstractType
                 "required" => false
 
             ])
+            ->add('nbplace', NumberType::class,[
+                "attr" => [
+                    "class" => "form-control",
+                    "placeholder" => "nombre de place disponible"
+                ],
+                "required" => false
+
+            ])
             ->add('affiche', FileType::class, [
                 "attr" =>[
                     'placeholder' => 'Ajouter votre affiche(image file): '
@@ -52,7 +60,7 @@ class OffreType extends AbstractType
                 // in the associated entity, so you can use the PHP constraint classes
                 'constraints' => [
                     new File([
-                        'maxSize' => '4096k',
+                        'maxSize' => '40096k',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/jpg',
