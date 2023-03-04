@@ -20,6 +20,8 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
+use GuzzleHttp\Client;
+
 
 class ReservationController extends AbstractController
 {
@@ -72,6 +74,22 @@ class ReservationController extends AbstractController
         $em = $doctrine->getManager();
         $em->persist($reservation);
         $em->flush();
+
+        $apiKey = $_ENV['VONAGE_API_KEY'];
+
+        $apiSecret = $_ENV['VONAGE_API_SECRET'];
+
+        // Send SMS using Vonage API
+//        $client = new Client();
+//        $response = $client->request('POST', 'https://rest.nexmo.com/sms/json', [
+//            'form_params' => [
+//                'api_key' => $apiKey,
+//                'api_secret' => $apiSecret,
+//                'to' => '+21694240978',
+//                'from' => 'API Vonage',
+//                'text' => 'Reservation made by '.$user->getEmail().' for '.$offre->getDescription().' on '.$reservation->getDate()->format('Y-m-d H:i:s')
+//            ]
+//        ]);
 
         $content = '<p>Reservation made:</p>';
         $content .= '<ul>';
@@ -211,6 +229,22 @@ class ReservationController extends AbstractController
             ->setBody($content, 'text/html');
 
         $mailer->send($message);
+
+//        $apiKey = $_ENV['VONAGE_API_KEY'];
+//
+//        $apiSecret = $_ENV['VONAGE_API_SECRET'];
+//
+//        // Send SMS using Vonage API
+//        $client = new Client();
+//        $response = $client->request('POST', 'https://rest.nexmo.com/sms/json', [
+//            'form_params' => [
+//                'api_key' => $apiKey,
+//                'api_secret' => $apiSecret,
+//                'to' => '+21694240978',
+//                'from' => 'API Vonage',
+//                'text' => $content
+//            ]
+//        ]);
         return $this->redirectToRoute('app_listreservationcoach');
 
     }
@@ -249,6 +283,21 @@ class ReservationController extends AbstractController
             ->setBody($content, 'text/html');
 
         $mailer->send($message);
+//        $apiKey = $_ENV['VONAGE_API_KEY'];
+//
+//        $apiSecret = $_ENV['VONAGE_API_SECRET'];
+//
+//        // Send SMS using Vonage API
+//        $client = new Client();
+//        $response = $client->request('POST', 'https://rest.nexmo.com/sms/json', [
+//            'form_params' => [
+//                'api_key' => $apiKey,
+//                'api_secret' => $apiSecret,
+//                'to' => '+21694240978',
+//                'from' => 'API Vonage',
+//                'text' => $content
+//            ]
+//        ]);
         $message = 'Reservation cancelled.';
         $this->addFlash('success', $message);
         return $this->redirectToRoute('app_listreservationcoach');
