@@ -1,0 +1,4 @@
+app_qrCode:
+  path: '/front/qrCode/{id}'
+  controller: App\Controller\QrCodeApiController::generateQrCode
+  methods: ['GET']

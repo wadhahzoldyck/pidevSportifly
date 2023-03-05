@@ -52,6 +52,8 @@
 ================================================== -->
 <section id="bricks">
 
+    <a>Actualites : ({{actualites.getTotalItemCount}})</a>
+
     <div class="row masonry">
 
         <!-- brick-wrapper -->
@@ -86,6 +88,8 @@
                             {{ actualite.description }}
                         </div>
                         <p>{{ actualite.date|date("F jS \\a\\t g:ia") }}</p>
+
+
 
                     </div>
                 </article>
@@ -187,7 +191,7 @@
 
     </div> <!-- end row -->
 
-
+    {{knp_pagination_render(actualites)}}
 
 </section> <!-- end bricks -->
 

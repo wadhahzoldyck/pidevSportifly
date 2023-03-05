@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use http\Message;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CommentaireActRepository::class)]
 class CommentaireAct
@@ -15,18 +16,22 @@ class CommentaireAct
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[groups("comment")]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message:"veillez entrer un contenu")]
     #[Assert\Length (min:3,minMessage:"le commentaire n'est pas assé long")]
+    #[groups("comment")]
     private ?string $contenu = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable]
+    #[groups("comment")]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne(inversedBy: 'commentaireActs')]
+    #[groups("comment")]
     private ?Actualite $id_actualite = null;
 
     #[ORM\ManyToOne(inversedBy: 'commentaireActs')]

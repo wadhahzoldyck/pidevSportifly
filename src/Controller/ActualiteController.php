@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Actualite;
 use App\Form\ActualiteType;
+use App\Services\MailerService;
 use App\Repository\ActualiteRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +24,7 @@ class ActualiteController extends AbstractController
     }
 
     #[Route('/ajouteractualite', name: 'app_ajouteractualite')]
-    public function ajouterActualite(Request $request,ManagerRegistry $doctrine,SluggerInterface $slugger): Response
+    public function ajouterActualite(MailerService $mailerService ,Request $request,ManagerRegistry $doctrine,SluggerInterface $slugger): Response
     {    $actualite=new Actualite();
         $form=$this->createForm(ActualiteType::class,$actualite);
         $form->handleRequest($request);
@@ -44,6 +45,13 @@ class ActualiteController extends AbstractController
                 $em =$doctrine->getManager() ;
                 $em->persist($actualite);
                 $em->flush();
+
+                $mailerService->sendNotification(
+                    'nourmoutii@gmail.com',
+                    'Nouvelle actualité ajoutée',
+                    'Une nouvelle actualité a été ajoutée sur notre site.'
+                );
+
                 return $this->redirectToRoute("app_actualite");
         }
             return $this->renderForm('actualite/ajouter.html.twig', array("form"=>$form));

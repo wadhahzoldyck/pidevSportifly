@@ -73,11 +73,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'id_user', targetEntity: CommentaireAct::class)]
     private Collection $commentaireActs;
 
+    #[ORM\OneToMany(mappedBy: 'id_user', targetEntity: LikeAct::class, orphanRemoval: true)]
+    private Collection $likeActs;
+
     public function __construct()
     {
         $this->reclamations = new ArrayCollection();
         $this->activiters = new ArrayCollection();
         $this->commentaireActs = new ArrayCollection();
+        $this->likeActs = new ArrayCollection();
     }
 
 
@@ -327,6 +331,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($commentaireAct->getIdUser() === $this) {
                 $commentaireAct->setIdUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LikeAct>
+     */
+    public function getLikeActs(): Collection
+    {
+        return $this->likeActs;
+    }
+
+    public function addLikeAct(LikeAct $likeAct): self
+    {
+        if (!$this->likeActs->contains($likeAct)) {
+            $this->likeActs->add($likeAct);
+            $likeAct->setIdUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLikeAct(LikeAct $likeAct): self
+    {
+        if ($this->likeActs->removeElement($likeAct)) {
+            // set the owning side to null (unless already changed)
+            if ($likeAct->getIdUser() === $this) {
+                $likeAct->setIdUser(null);
             }
         }
 

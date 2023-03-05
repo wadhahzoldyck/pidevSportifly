@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use http\Message;
 use Symfony\Component\Validator\Constraints as Asserts;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: ActualiteRepository::class)]
@@ -23,17 +24,21 @@ class Actualite
 
     #[ORM\Column(length: 255)]
     #[Asserts\Length (min:3,minMessage:"le titre n'est pas assé long")]
+    #[groups("actualite")]
     private ?string $titre = null;
 
     #[ORM\Column(length: 255)]
+    #[groups("actualite")]
     private ?string $image = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Asserts\NotBlank(message:"veillez entrer un contenu")]
+    #[groups("actualite")]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
     #[Asserts\NotBlank(message:"veillez entrer un contenu")]
+    #[groups("actualite")]
     private ?string $categorie = null;
 
     #[ORM\OneToMany(mappedBy: 'id_actualite', targetEntity: CommentaireAct::class)]
@@ -43,9 +48,14 @@ class Actualite
     #[Gedmo\Timestampable]
     private ?\DateTimeInterface $date = null;
 
+    #[ORM\OneToMany(mappedBy: 'id_actualite', targetEntity: LikeAct::class)]
+    private Collection $id_user;
+
+
     public function __construct()
     {
         $this->commentaireActs = new ArrayCollection();
+        $this->id_user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -146,5 +156,36 @@ class Actualite
     {
         return(string)$this->getId();
     }
+
+    /**
+     * @return Collection<int, LikeAct>
+     */
+    public function getLikes(): Collection
+    {
+        return $this->Likes;
+    }
+
+    public function addLikes(LikeAct $Likes): self
+    {
+        if (!$this->Likes->contains($Likes)) {
+            $this->Likes->add($Likes);
+            $Likes->setIdActualite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLikes(LikeAct $Likes): self
+    {
+        if ($this->Likes->removeElement($Likes)) {
+            // set the owning side to null (unless already changed)
+            if ($Likes->getIdActualite() === $this) {
+                $Likes->setIdActualite(null);
+            }
+        }
+
+        return $this;
+    }
+
 
 }
