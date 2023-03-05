@@ -14,6 +14,8 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use App\Repository\UserRepository;
 
 class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -22,16 +24,21 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(UserRepository $userRepository,private UrlGeneratorInterface $urlGenerator)
     {
+        $this->userRepository= $userRepository;
     }
+
 
     public function authenticate(Request $request): Passport
     {
         $email = $request->request->get('email', '');
+        $user = $this->userRepository->findOneBy(['email' => $email]);
 
         $request->getSession()->set(Security::LAST_USERNAME, $email);
-
+        if ($user && $user->isIsBlocked()) {
+            throw new CustomUserMessageAuthenticationException('Your account has been blocked. Please contact the administrator for assistance.');
+        }
         return new Passport(
             new UserBadge($email),
             new PasswordCredentials($request->request->get('password', '')),

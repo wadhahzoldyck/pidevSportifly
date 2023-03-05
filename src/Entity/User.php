@@ -3,17 +3,20 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
+use phpDocumentor\Reflection\DocBlock\Serializer;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 #[ApiResource]
@@ -22,20 +25,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("users")]
 
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'please enter valid Email ')]
+    #[Assert\Email(message: 'please enter valid Email ')]
+    #[Groups("users")]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups("users")]
     private array $roles =[];
 
     /**
      * @var string The hashed password
      */
+
     #[ORM\Column]
+    #[Assert\NotCompromisedPassword]
+    /**  #[Assert\NotBlank(message: 'Veuillez saisir votre mot de passe')]
+     #[Assert\Regex(pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{6,}$/', message: 'Le mot de passe doit contenir au moins 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial')]**/
     private ?string $password = null;
 
 
@@ -50,22 +61,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * )
      */
     #[ORM\Column(length: 255)]
+   // #[Assert\Regex(pattern: '/^(?=.[a-z])(?=.[A-Z]).+$/',message:"Nom doit etre des lettres")]
+    #[Groups("users")]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups("users")]
     private ?string $diplome = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups("users")]
     private ?string $experience = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups("users")]
     private ?string $image = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $reset_token = null;
+    #[ORM\Column(type: 'string', length: 10,nullable: true, options: ['default' => 'Actif'])]
+    #[Groups("users")]
+    private ?String $status;
 
     #[ORM\OneToMany(mappedBy: 'User', targetEntity: Reclamations::class)]
     private Collection $reclamations;
+
+    #[ORM\Column(type: "boolean")]
+    private $isBlocked = false;
+    #[ORM\Column(type: "boolean")]
+    private $isApproved = false;
+
+    #[ORM\Column(type: "boolean")]
+    private $etat = false;
 
     public function __construct()
     {
@@ -264,6 +291,58 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setImage(?string $image): void
     {
         $this->image = $image;
+    }
+
+    /**
+     * @return String|null
+     */
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param String|null $status
+     */
+    public function setStatus(?string $status): void
+    {
+        $this->status = $status;
+    }
+
+    public function isIsBlocked(): ?bool
+    {
+        return $this->isBlocked;
+    }
+
+    public function setIsBlocked(?bool $isBlocked): self
+    {
+        $this->isBlocked = $isBlocked;
+
+        return $this;
+    }
+
+    public function isIsApproved(): ?bool
+    {
+        return $this->isApproved;
+    }
+
+    public function setIsApproved(?bool $isApproved): self
+    {
+        $this->isApproved = $isApproved;
+
+        return $this;
+    }
+
+    public function isEtat(): ?bool
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(?bool $etat): self
+    {
+        $this->etat = $etat;
+
+        return $this;
     }
 
 

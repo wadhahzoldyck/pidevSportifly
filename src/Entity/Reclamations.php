@@ -6,12 +6,14 @@ use App\Repository\ReclamationsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ReclamationsRepository::class)]
 class Reclamations
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+
     private ?int $id = null;
     /**
      * @Assert\NotBlank(message="le type   :doit etre non vide")

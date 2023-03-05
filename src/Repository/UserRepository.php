@@ -55,6 +55,31 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         $this->save($user, true);
     }
+    public function findOneByEmail($email): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+    public function orderByexperience()
+    {
+        return $this->createQueryBuilder('u')
+            ->orderBy('u.experience', 'ASC')
+            ->getQuery()->getResult();
+    }
+
+    public function findUsersByRole($role)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('u')
+            ->where('u.roles LIKE :roles')
+            ->setParameter('roles', '%"'.$role.'"%');
+
+        return $qb->getQuery()->getResult();
+    }
 
 //    /**
 //     * @return User[] Returns an array of User objects
@@ -80,4 +105,71 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function findUserBylastnameAsc(){
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager
+            ->createQuery('SELECT u FROM App\Entity\User u ORDER BY u.lastname ASC');
+        return $query->getResult();
+    }
+
+    public function findUserBylastnameDesc(){
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager
+            ->createQuery('SELECT u FROM App\Entity\User u ORDER BY u.lastname DESC');
+        return $query->getResult();
+    }
+
+    public function findUserBydiplomeAsc(){
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager
+            ->createQuery('SELECT u FROM App\Entity\User u ORDER BY u.diplome ASC');
+        return $query->getResult();
+    }
+
+    public function findUserBydiplomeDesc(){
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager
+            ->createQuery('SELECT u FROM App\Entity\User u ORDER BY u.diplome DESC');
+        return $query->getResult();
+    }
+
+    public function findUserByexperienceAsc(){
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager
+            ->createQuery('SELECT u FROM App\Entity\User u ORDER BY u.experience ASC');
+        return $query->getResult();
+    }
+
+    public function findUserByexperienceDesc(){
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager
+            ->createQuery('SELECT u FROM App\Entity\User u ORDER BY u.experience DESC');
+        return $query->getResult();
+    }
+
+
+    public function numberOfUsers(){
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager
+            ->createQuery('SELECT count(u) FROM App\Entity\User u');
+        return $query->getSingleScalarResult();
+    }
+
+    public function findUserbyEmail($email){
+        return $this->createQueryBuilder("s")
+            ->where('s.email LIKE :email')
+            ->setParameter('email', '%'.$email.'%')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countByRoles(){
+        $query = $this->createQueryBuilder('u');
+        $query
+            ->select('SUBSTRING(u.roles, 1 , 10) as roles , COUNT(u) as count')
+            ->groupBy('roles')
+        ;
+        return $query->getQuery()->getResult();
+    }
+
 }

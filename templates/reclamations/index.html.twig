@@ -16,7 +16,11 @@
                 <th>date</th>
                 <th>ID_User</th>
                 <th>actions</th>
+                <a href="{{ path('app_reclamation_stat') }}" class="btn btn-primary" tabindex="-1" role="button">Statistique</a>
+
+
             </tr>
+
         </thead>
         <tbody>
         {% for reclamation in reclamation %}
@@ -30,8 +34,14 @@
                 <td> {{ reclamation.User}}</td>
                 <td>
                 <td>
+
                     <a href="{{ path('app_reclamations_show', {'id': reclamation.id}) }}" class="btn btn-primary" tabindex="-1" role="button">afficher detail</a>
+
+                   {# <a href="{{ path('PDF_Reclamation') }}" class="btn btn-primary" tabindex="-1" role="button">PDF</a>#}
+
                 </td>
+
+
             </tr>
         {% else %}
             <tr>

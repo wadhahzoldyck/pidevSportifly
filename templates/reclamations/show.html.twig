@@ -28,7 +28,8 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_reclamations_index') }}"class="btn btn-primary" tabindex="-1" role="button">Repondre</a>
+    <a href="{{ path('reclamationtraite',{'id': reclamation.id}) }}"class="btn btn-primary" tabindex="-1" role="button">Repondre</a>
+    {#href="{{ path('PDF_Reclamation') }}" class="btn btn-primary" tabindex="-1" role="button">PDF</a>  #}
 
     {{ include('reclamations/_delete_form.html.twig') }}
 {% endblock %}
