@@ -6,6 +6,12 @@
 parameters:
 
 services:
+    App\Command\MailReminderCommand:
+        tags:
+            - { name: 'console.command' }
+            - arguments:
+                  - '@doctrine'
+                  - '@mailer'
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

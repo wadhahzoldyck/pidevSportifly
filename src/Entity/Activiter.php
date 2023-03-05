@@ -6,13 +6,14 @@ use App\Repository\ActiviterRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ActiviterRepository::class)]
 class Activiter
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("Activite")]
     private ?int $id = null;
     #[Assert\NotBlank(message:"merci de remplir le champ")]
     #[Assert\Length(
@@ -21,22 +22,27 @@ class Activiter
         minMessage: 'votre titre ne contient pas {{ limit }} characters',
         maxMessage: 'votre titre a depassé {{ limit }} characters',
     )]
+    #[Groups("Activite")]
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
 
     #[Assert\GreaterThan('today',message: ("date deja pass.."))]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups("Activite")]
     private ?\DateTimeInterface $date_debut = null;
     #[Assert\Expression('this.getDateDebut()<this.getDateFin()',message: ("erreur periode"))]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups("Activite")]
     private ?\DateTimeInterface $date_fin = null;
 
     #[ORM\ManyToOne(inversedBy: 'activiters')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups("Activite")]
     private ?CategorieActivite $ref_categ = null;
 
     #[ORM\ManyToOne(inversedBy: 'activiters')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups("Activite")]
     private ?User $id_user = null;
 
     public function getId(): ?int
