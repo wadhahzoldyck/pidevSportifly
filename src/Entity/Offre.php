@@ -68,11 +68,15 @@ class Offre
 
     private ?CategorieActivite $id_category = null;
 
-    #[ORM\OneToMany(mappedBy: 'offre_id', targetEntity: Stars::class)]
-    private Collection $stars;
+
 
     #[ORM\Column]
     private ?int $nbplace = null;
+
+    #[ORM\OneToMany(mappedBy: 'id_offre', targetEntity: Stars::class)]
+    private Collection $stars;
+
+
 
 
 
@@ -82,6 +86,7 @@ class Offre
     {
         $this->reservations = new ArrayCollection();
         $this->stars = new ArrayCollection();
+        $this->offerRatings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -190,6 +195,25 @@ class Offre
 
         return $this;
     }
+//
+//    /**
+//     * @return Collection<int, Stars>
+//     */
+
+
+
+
+    public function getNbplace(): ?int
+    {
+        return $this->nbplace;
+    }
+
+    public function setNbplace(int $nbplace): self
+    {
+        $this->nbplace = $nbplace;
+
+        return $this;
+    }
 
     /**
      * @return Collection<int, Stars>
@@ -203,7 +227,7 @@ class Offre
     {
         if (!$this->stars->contains($star)) {
             $this->stars->add($star);
-            $star->setOffreId($this);
+            $star->setIdOffre($this);
         }
 
         return $this;
@@ -213,25 +237,17 @@ class Offre
     {
         if ($this->stars->removeElement($star)) {
             // set the owning side to null (unless already changed)
-            if ($star->getOffreId() === $this) {
-                $star->setOffreId(null);
+            if ($star->getIdOffre() === $this) {
+                $star->setIdOffre(null);
             }
         }
 
         return $this;
     }
 
-    public function getNbplace(): ?int
-    {
-        return $this->nbplace;
-    }
 
-    public function setNbplace(int $nbplace): self
-    {
-        $this->nbplace = $nbplace;
 
-        return $this;
-    }
+
 
 
 

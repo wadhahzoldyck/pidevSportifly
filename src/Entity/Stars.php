@@ -20,7 +20,7 @@ class Stars
     private ?int $rateIndex = null;
 
     #[ORM\ManyToOne(inversedBy: 'stars')]
-    private ?Offre $offre_id = null;
+    private ?Offre $id_offre = null;
 
     public function getId(): ?int
     {
@@ -51,14 +51,14 @@ class Stars
         return $this;
     }
 
-    public function getOffreId(): ?Offre
+    public function getIdOffre(): ?Offre
     {
-        return $this->offre_id;
+        return $this->id_offre;
     }
 
-    public function setOffreId(?Offre $offre_id): self
+    public function setIdOffre(?Offre $id_offre): self
     {
-        $this->offre_id = $offre_id;
+        $this->id_offre = $id_offre;
 
         return $this;
     }

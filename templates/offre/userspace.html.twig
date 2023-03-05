@@ -44,20 +44,7 @@
                 <p class="name">Tina White</p>
             </div>
         </div>
-        <!------------------- END OF STORIES -------------------->
-        <!--------------- FEEDS ----------->
-{#        <input type="search" id="myInput" class="form-control pl-6" placeholder="Search division"/>#}
-{#        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>#}
-{#        <script>#}
-{#            $(document).ready(function () {#}
-{#                $("#myInput").on("keyup", function () {#}
-{#                    var value = $(this).val().toLowerCase();#}
-{#                    $("#myTable tr").filter(function () {#}
-{#                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)#}
-{#                    });#}
-{#                })#}
-{#            });#}
-{#        </script>#}
+
         {% for i in listOffre%}
             <div class="feeds">
                 <div class="feed">
@@ -90,6 +77,13 @@
     {% endif %}
                         </div>
 
+                        <div class="rating" data-offer-id="{{ i.id }}">
+                            <input type="hidden" id="rating-input" name="rating" value="{{ i.id }}" />
+                            {% for i in 1..5 %}
+                                <i class="far fa-star rating-star"></i>
+                            {% endfor %}
+                        </div>
+
                     </div>
 
                 </div>
@@ -99,3 +93,48 @@
 
 {% endblock %}
 {% block right %} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, nostrum! {% endblock %}
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Add event listeners for the rating stars
+            $('.rating-star').on('click', function() {
+                var rating = $(this).index() + 1;
+                var offerId = $(this).closest('.rating').data('offer-id');
+                $('#rating-input').val(rating);
+                $(this).removeClass('far').addClass('fas');
+                $(this).prevAll().removeClass('far').addClass('fas');
+                $(this).nextAll().removeClass('fas').addClass('far');
+
+                // Send AJAX request to save the rating
+                $.ajax({
+                    type: "POST",
+                    url: "{{ path('rate_offer') }}",
+
+                    data: {'rating': rating, 'offerId': offerId},
+                    success: function(data) {
+                        // Add the 'fas' class to the selected stars
+                        $('.rating-star').removeClass('fas');
+                        $('.rating-star:lt(' + rating + ')').addClass('fas');
+                        console.log(offerId);
+                    },
+
+                    error: function(data) {
+                        console.log('Error while saving rating.');
+                    }
+                });
+            });
+
+            $('.rating-star').on('mouseover', function() {
+                $(this).removeClass('far').addClass('fas');
+                $(this).prevAll().removeClass('far').addClass('fas');
+            });
+
+            $('.rating-star').on('mouseout', function() {
+                $(this).removeClass('fas').addClass('far');
+                $(this).prevAll().removeClass('fas').addClass('far');
+            });
+        });
+    </script>
+{% endblock %}
+

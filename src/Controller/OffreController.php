@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\CategorieActivite;
 use App\Entity\Offre;
+use App\Entity\Stars;
 use App\Entity\User;
 use App\Form\OffreType;
 use App\Repository\CategorieActiviteRepository;
@@ -57,6 +58,39 @@ class OffreController extends AbstractController
         return $this->render('offre/userspace.html.twig', array( 'listOffre' => $offre,));
     }
 
+
+    #[Route('/offer/rate', name: 'rate_offer', methods: ['GET', 'POST'])]
+    public function rateOffer(Request $request,UserRepository $userRepository,OffreRepository $offreRepository,ManagerRegistry $doctrine):Response
+    {
+        $rating = $request->request->get('rating');
+        $offerId = $request->request->get('offerId');
+
+        // Check that offerId is not null
+        if ($offerId === null) {
+            return new JsonResponse(['success' => false, 'message' => 'offerId parameter is missing.']);
+        }
+
+        // TODO: Save the rating to the database
+        $uID= $userRepository->find(2);
+        $offre=$offreRepository->find($offerId);
+
+        // Check that an Offre entity was found for the offerId
+        if ($offre === null) {
+            return new JsonResponse(['success' => false, 'message' => 'Offre entity not found for offerId: '.$offerId]);
+        }
+
+        if ($rating !== null) {
+            $stars = new Stars();
+            $stars->setUID($uID);
+            $stars->setIdOffre($offre);
+            $stars->setRateIndex($rating);
+            $em = $doctrine->getManager();
+            $em->persist($stars);
+            $em->flush();
+        }
+
+        return new JsonResponse(['success' => true]);
+    }
 
 
 
@@ -139,6 +173,8 @@ class OffreController extends AbstractController
         $offre = new Offre();
         $form = $this->createForm(OffreType::class, $offre);
         $offre->setIdUser($user);
+        $offre->setDate(new \DateTime('now') ) ;
+
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid() ){
             $affiche = $form->get('affiche')->getData();

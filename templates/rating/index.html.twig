@@ -15,8 +15,7 @@
     <i class="fa fa-star fa-2x" data-index="2"></i>
     <i class="fa fa-star fa-2x" data-index="3"></i>
     <i class="fa fa-star fa-2x" data-index="4"></i>
-    <br><br>
-    <?php echo round($avg,2) ?>
+
 </div>
 
 <script src="http://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
@@ -80,11 +79,8 @@
     }
 
     function showAverage() {
-        var currentUrl = window.location.pathname;
-        var ratingUrl = currentUrl + '/rating';
         $.ajax({
-{#            {{path('star',{id:produits.id})}}#}
-            url: ratingUrl,
+            url: "rating",
             method: "GET",
             dataType: 'json',
             data: {
@@ -103,6 +99,14 @@
 
 </script>
 
-
+<div align="center" style="background: #fff; padding: 50px;color:white;">
+    <i class="fa fa-star fa-2x" data-index="0"></i>
+    <i class="fa fa-star fa-2x" data-index="1"></i>
+    <i class="fa fa-star fa-2x" data-index="2"></i>
+    <i class="fa fa-star fa-2x" data-index="3"></i>
+    <i class="fa fa-star fa-2x" data-index="4"></i>
+    <br><br>
+    <span id="average"></span>
+</div>
 </body>
 </html>

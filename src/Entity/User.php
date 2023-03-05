@@ -80,6 +80,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'uID', targetEntity: Stars::class)]
     private Collection $stars;
 
+
+
+
+
     public function __construct()
     {
         $this->reclamations = new ArrayCollection();
@@ -402,6 +406,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
+
+
+
 
 
 
