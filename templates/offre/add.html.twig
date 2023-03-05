@@ -1,0 +1,37 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block title  %} Add Offre {% endblock %}
+
+{% block body %}
+    <div style="position: absolute; margin-left: 500px; margin-top: 100px">
+
+    <h1>Ajouter un offre</h1>
+        {{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }}
+    <div class="form-group">
+
+        {{ form_label(form.description) }}
+        {{ form_widget(form.description) }}
+        {{ form_errors(form.description) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.prix) }}
+        {{ form_widget(form.prix) }}
+        {{ form_errors(form.prix) }}
+
+    </div>
+        <br>
+    <div class="form-group">
+
+        {{ form_row(form.affiche) }}
+        {{ form_errors(form.affiche) }}
+
+    </div>
+        <br>
+
+    <br>
+    <button class="btn btn-primary">
+        Ajouter Offre
+    </button>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
