@@ -19,8 +19,8 @@ class UserController extends AbstractController
     {
         $this->userPasswordEncoder = $userPasswordEncoder;
     }
-    #[Route('/admin', name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    #[Route('/admin', name: 'app_user_index', methods: ['GET'])]    
+    public function index(UserRepository $userRepository): Response 
 
     {
       /*  $user=$this->getUser();
