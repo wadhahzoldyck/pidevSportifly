@@ -87,12 +87,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $reclamations;
 
     #[ORM\Column(type: "boolean")]
+    #[Groups("users")]
     private $isBlocked = false;
     #[ORM\Column(type: "boolean")]
+    #[Groups("users")]
     private $isApproved = false;
 
-    #[ORM\Column(type: "boolean")]
-    private $etat = false;
+    #[ORM\Column(type: 'string', length: 10,nullable: true, options: ['default' => 'Actif'])]
+    #[Groups("users")]
+    private ?string $etat = "Actif";
 
     public function __construct()
     {
@@ -333,17 +336,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isEtat(): ?bool
+    /**
+     * @return string|null
+     */
+    public function getEtat(): ?string
     {
         return $this->etat;
     }
 
-    public function setEtat(?bool $etat): self
+    /**
+     * @param string|null $etat
+     */
+    public function setEtat(?string $etat): void
     {
         $this->etat = $etat;
-
-        return $this;
     }
+
 
 
 

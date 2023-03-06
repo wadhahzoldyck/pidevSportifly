@@ -3,6 +3,13 @@
 {% block title %}Reclamations index{% endblock %}
 
 {% block body %}
+<style>
+
+    .fa-chart-bar{
+        background-color: white;
+        border-color: #20c997;
+    }
+</style>
 <div style="position: absolute; margin-left:500px; margin-top: 100px">
     <h1>Reclamations </h1>
 
@@ -16,9 +23,7 @@
                 <th>date</th>
                 <th>ID_User</th>
                 <th>actions</th>
-                <a href="{{ path('app_reclamation_stat') }}" class="btn btn-primary" tabindex="-1" role="button">Statistique</a>
-
-
+                <a href="{{ path('app_reclamation_stat') }}" class="btn btn-primary" tabindex="-1" role="button">Statistique</a
             </tr>
 
         </thead>

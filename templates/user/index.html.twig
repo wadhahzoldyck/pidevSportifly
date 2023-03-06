@@ -1,9 +1,42 @@
 
 {% extends 'dashboard.html.twig' %}
 {% block body %}
+    <style>
+        .agrandir {
+            width: 50px;
+            height: 100px;
+            transition: height 3s ease 200ms, width 3s ease 200ms;
+        }
+
+        .agrandir:hover {
+            width: 50px;
+            height: 200px;
+        }
+    </style>
+    <style>
+        .btn-narrow {
+            padding: .25rem .5rem;
+        }
+        .btn-primary {
+            background-color: #2a2185;
+            border-color: #2a2185;
+        }
+        .btn-success {
+            background-color: #20c997;
+            border-color: #20c997;
+        }
+    </style>
+
     <div style="position: absolute; margin-left:400px; margin-top: 100px">
     <h1 id="dd1"> Liste des utilisateurs</h1>
-    </br>
+        <th style="text-align:center;"></th>
+
+        <br>
+        <div>
+            <a href="{{ path('app_tri') }}" class="btn btn-outline-dark btn-sm"><i class="fas fa-sort-amount-down"></i>Trier par experience</a><br>
+        </div>
+
+        </br>
     <input type="text" id="search" class="form-control" placeholder="Search">
     <div>
         <table  id="t" class="table table-striped ">
@@ -12,51 +45,47 @@
                 <th>Email</th>
                 <th>lastname</th>
                 <th>Roles</th>
-                <th>image</th>
-                <th>status</th>
                 <th>etat</th>
-                <br>
-                <div>
-                    <a href="{{ path('app_tri') }}" class="btn btn-outline-dark btn-sm"><i class="fas fa-sort-amount-down"></i>Trier par experience</a><br>
-
-
-                </div>
-
-
+                <th>experience</th>
+                <th>image</th>
+               {# <th>status</th> #}
                 <th>actions</th>
                 <th>Debloquer</th>
-
             </tr>
             </thead>
             <tbody id="all">
             {% for user in users %}
             <tr>
-
                 <td>{{user.email }}</td>
                 <td>{{ user.lastname }}</td>
                 <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
                {#<td>{{ user.diplome }}</td>
                 <td>{{ user.experience }}</td> #}
-                <td>{{ user.image }}</td>
-                {% set img = user.image %}
+               {# <td>{{ user.image }}</td>#}
 
-                <td><img src="{{asset(img)}}" alt="#" style="width:200%;"></td>
-                <td>{{ user.status }}</td>
+              {# <td>{{ user.status }}</td>#}
                 <td>{{ user.etat }}</td>
+                <td>{{ user.experience }}</td>
+                {% set img = user.image %}
+                <td><img src="{{asset(img)}}" alt="#" class="agrandir" style="width:100%;"></td>
 
-                    <div>
-                        <td>
-                    <a href="{{ path('app_user_edit', {'id': user.id})}}" class="btn btn-primary" tabindex="-1" role="button">Edit</a>
-
-                    <a href="{{ path('PDF_user', {'id': user.id})}}" class="btn btn-primary" tabindex="-1" role="button">PDF</a>
-                            <a href="{{ path('app_user_block', {'id': user.id})}}"><i class="fas fa-ban" style="margin-top:-30px; margin-left:40px;"></i></a>
-                        </td>
-                    </div>
                 <td>
-                    <a href="{{ path('app_user_block', {'id': user.id}) }}" class="btn btn-danger">bloquer</a>
-                    <a href="{{ path('app_user_unblock', {'id': user.id}) }}" class="btn btn-success">Debloquer</a>
+                <div class="btn-group" role="group">
+                    <a href="{{ path('app_user_edit', {'id': user.id})}}" class="btn btn-primary" tabindex="-1" role="button">Edit</a>
+                    <a href="{{ path('PDF_user', {'id': user.id})}}" class="btn btn-secondary" tabindex="-1" role="button">PDF</a>
+                </div>
                 </td>
 
+                <td>
+
+                    <div class="btn-group" role="group">
+                        <a href="{{ path('app_user_block', {'id': user.id}) }}" class="btn btn-danger">bloquer</a>
+                        <a href="{{ path('app_user_unblock', {'id': user.id}) }}" class="btn btn-success">Debloquer</a>
+                    </div>
+
+                </td>
+                </div>
+        </tr>
                 {% endfor %}
             </tbody>
             <tbody id="searchtab">
@@ -97,7 +126,7 @@
                             $('#t tbody#searchtab').empty();
                             $.each(resultats, function(i, obj) {
                                 $('#t tbody#all').hide();
-                                $('#t tbody#searchtab').append('<tr><td> ' + obj.id  +'</td><td> '+obj.email+'</td><td> '+obj.roles+ '</td><td> '+obj.password+ '</td><td> '+obj.name+'</td><td><img src="/uploads/'+obj.id+'" width="150" height="200"></td><td><a href="'+obj.id+'/edit">update</a><a href="'+obj.id+'/show">show</a>     </td></tr>');
+                                $('#t tbody#searchtab').append('<tr><td> ' + obj.email  +'</td><td> '+obj.lastname+'</td><td> '+obj.roles+ '</td><td> '+obj.etat+ '</td><td> '+obj.experience+'</td><td><img src="/userphoto'+obj.id+'" width="150" height="200"></td><td><a href="'+obj.id+'/edit">update</a><a href="'+obj.id+'/show">show</a>     </td></tr>');
                             });
                         }
 
@@ -114,4 +143,5 @@
         });
 
     </script>
+
 {% endblock %}

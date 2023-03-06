@@ -75,7 +75,7 @@ class UserController extends AbstractController
         $user = $paginator->paginate(
             $user, /* query NOT result */
             $request->query->getInt('page', 1),
-            7
+            4
         );
 
         return $this->render("user/index.html.twig", array("users" => $user));
@@ -378,8 +378,8 @@ class UserController extends AbstractController
     public function block(Request $request, User $user, UserRepository $userRepository): Response
     {
         $user->setIsBlocked(true);
+        $user->setEtat(" bloque");
         $userRepository->save($user, true);
-        $user->setEtat("l utlisateur est bloque");
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
 
@@ -388,8 +388,8 @@ class UserController extends AbstractController
     public function unblock(Request $request, User $user, UserRepository $userRepository): Response
     {
         $user->setIsBlocked(false);
+        $user->setEtat("debloque");
         $userRepository->save($user, true);
-        $user->setEtat("l utilisateur est debloque");
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
 
