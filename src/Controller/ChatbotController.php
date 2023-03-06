@@ -2,36 +2,67 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use http\Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-
+use BotMan\BotMan\BotMan;
+use BotMan\BotMan\BotManFactory;
+use BotMan\BotMan\Drivers\DriverManager;
 
 class ChatbotController extends AbstractController
 {
-    #[Route('/chatbot', name: 'app_chatbot')]
-    public function chat(Request $request): Response
+    /**
+     * @Route("/messagebot", name="message")
+     */
+    function messageAction(Request $request)
     {
-        // Get the user ID from the request
-        $userId = $request->get('user_id');
+        DriverManager::loadDriver(\BotMan\Drivers\Web\WebDriver::class);
 
-        // Get the user object from the database
-        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+        // Configuration for the BotMan WebDriver
+        $config = [];
 
-        // Create a new message for the chatbot
-        $message = new Message($request->get('text'), $user);
+        // Create BotMan instance
+        $botman = BotManFactory::create($config);
 
-        // Send the message to the chatbot service
-        $this->get('app.chatbot')->sendMessage($message);
+        // Give the bot some things to listen for.
+        $botman->hears('(hello|hi|hey)', function (BotMan $bot) {
+            $bot->reply('Hello!');
+        });
+        $botman->hears('(cant order food |wanna contact the admin |issue)', function (BotMan $bot) {
+            $bot->reply('Contact Us On "Energybox" To Solve The Issue');
+        });
+        $botman->hears('(thank you|tnx|nice)', function (BotMan $bot) {
+            $bot->reply('Happy to help <3  ');
+        });
+        $botman->hears('(bye|see you|byebye)', function (BotMan $bot) {
+            $bot->reply('Dont Forget to Come Back, bye and Have Nice Day ');
+        });
 
-        // Return a JSON response indicating that the message has been sent
-        return $this->json([
-            'success' => true,
-            'message' => 'Message sent'
-        ]);
+        // Set a fallback
+        $botman->fallback(function (BotMan $bot) {
+            $bot->reply('Sorry, I did not understand.');
+        });
+
+        // Start listening
+        $botman->listen();
+
+        return new Response();
     }
 
+    /**
+     * @Route("/messaagebot", name="homepage")
+     */
+    public function indexAction(Request $request): Response
+    {
+        return $this->render('chatbot/homepage.html.twig');
+    }
+
+    /**
+     * @Route("/chatframebot", name="chatframe")
+     */
+    public function chatframeAction(Request $request)
+    {
+        return $this->render('chatbot/chat_frame.html.twig');
+    }
 }
