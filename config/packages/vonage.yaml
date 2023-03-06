@@ -1,6 +1,0 @@
-services:
-  vonage.client:
-    class: Vonage\Client
-    arguments:
-      - '%env(VONAGE_API_KEY)%'
-      - '%env(VONAGE_API_SECRET)%'
